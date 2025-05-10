@@ -3,7 +3,10 @@ import { getPostData, getAllPostIds } from "@/lib/posts";
 import ScrollableContent from "./ScrollableContent";
 
 export async function generateStaticParams() {
-  return getAllPostIds();
+  const paths = await getAllPostIds();
+  return paths.map((path) => ({
+    id: path.params.id,
+  }));
 }
 
 type Props = {
