@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ],
     unoptimized: true,
+    loader: 'custom',
+    loaderFile: './image-loader.js',
+    domains: ['localhost'],
   },
   async rewrites() {
     return [
@@ -22,7 +25,6 @@ const nextConfig = {
       },
     ];
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/tategaki' : '',
 }
 
 module.exports = nextConfig 
