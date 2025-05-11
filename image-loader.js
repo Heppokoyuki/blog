@@ -4,6 +4,11 @@ export default function imageLoader({ src, width, quality }) {
     return src;
   }
   
-  // 相対パスの場合はそのまま返す
+  // Twitterカード用の画像サイズを最適化
+  if (width >= 1200) {
+    return `${src}?w=1200&h=630&fit=crop&q=${quality || 75}`;
+  }
+  
+  // その他の画像サイズ
   return `${src}?w=${width}&q=${quality || 75}`;
 } 

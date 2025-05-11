@@ -12,6 +12,8 @@ const nextConfig = {
     loader: 'custom',
     loaderFile: './image-loader.js',
     domains: ['localhost'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   async rewrites() {
     return [
@@ -27,4 +29,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig 
+export default nextConfig; 

@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 import { remarkImagePlugin } from './markdown';
+import { logger } from './logger';
 
 const postsDirectory = path.join(process.cwd(), 'content/posts');
 
@@ -24,11 +25,11 @@ export async function getPostData(id: string): Promise<Post> {
   }
 
   const fileContents = fs.readFileSync(fullPath, 'utf8');
-  console.log('Original markdown:', fileContents);  // 元のMarkdownを確認
+  logger.log('Original markdown:', fileContents);  // 元のMarkdownを確認
 
   // gray-matterでメタデータを解析
   const matterResult = matter(fileContents);
-  console.log('Matter result:', matterResult);  // メタデータ解析結果を確認
+  logger.log('Matter result:', matterResult);  // メタデータ解析結果を確認
 
   // remarkでMarkdownをHTMLに変換
   const processedContent = await remark()
@@ -36,7 +37,7 @@ export async function getPostData(id: string): Promise<Post> {
     .use(html)
     .process(matterResult.content);
   const contentHtml = processedContent.toString();
-  console.log('Processed HTML:', contentHtml);  // 変換後のHTMLを確認
+  logger.log('Processed HTML:', contentHtml);  // 変換後のHTMLを確認
 
   return {
     id,

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getPostData, getAllPostIds } from "@/lib/posts";
 import ScrollableContent from "./ScrollableContent";
+import { Metadata } from "next";
 
 export async function generateStaticParams() {
   const paths = await getAllPostIds();
@@ -16,6 +17,38 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const resolvedParams = await params;
+  const post = await getPostData(resolvedParams.id);
+
+  // ロゴ画像のURLを絶対パスに変換
+  const logoUrl = `http://blog.uefi.jp/ogp.png`;
+
+  return {
+    title: post.title,
+    description: post.title,
+    openGraph: {
+      title: post.title,
+      description: post.title,
+      images: [
+        {
+          url: logoUrl,
+          width: 1200,
+          height: 630,
+          alt: 'へっぽこ山行記',
+        },
+      ],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.title,
+      images: [logoUrl],
+    },
+  };
+}
+
 export default async function PostPage({ params }: Props) {
   const resolvedParams = await params;
   const post = await getPostData(resolvedParams.id);
@@ -25,13 +58,13 @@ export default async function PostPage({ params }: Props) {
       <article className="w-full">
         {post.thumbnail && (
           <figure className="mb-8 relative">
-            <div className="w-full aspect-[2/1] mb-2 flex items-center justify-center">
+            <div className="w-full h-[400px] mb-2 flex items-center justify-center">
               <Image
                 src={post.thumbnail}
                 alt={post.title}
                 fill
                 priority
-                className="object-contain rounded-lg"
+                className="object-cover rounded-lg"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>

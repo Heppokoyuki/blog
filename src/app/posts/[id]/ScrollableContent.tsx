@@ -3,6 +3,14 @@
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { Zen_Old_Mincho } from 'next/font/google';
+import { logger } from '@/lib/logger';
+
+const zenOldMincho = Zen_Old_Mincho({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 type ScrollableContentProps = {
   content: string;
@@ -22,8 +30,8 @@ const ScrollableContent: React.FC<ScrollableContentProps> = ({ content }) => {
 
   // 画像マーカーを検出する関数
   const detectImageMarkers = () => {
-    console.log('Detecting image markers...');  // デバッグ用
-    console.log('Content:', content);  // デバッグ用
+    logger.log('Detecting image markers...');  // デバッグ用
+    logger.log('Content:', content);  // デバッグ用
 
     const markers: { src: string; alt: string; element: HTMLElement; originalPosition: number }[] = [];
     const contentElement = contentRef.current;
@@ -69,7 +77,7 @@ const ScrollableContent: React.FC<ScrollableContentProps> = ({ content }) => {
         originalPosition: relativeLeft
       });
 
-      console.log('Created marker:', {
+      logger.log('Created marker:', {
         src,
         alt,
         position: relativeLeft,
@@ -79,11 +87,11 @@ const ScrollableContent: React.FC<ScrollableContentProps> = ({ content }) => {
       });
     });
 
-    console.log('Found markers in content:', markers);  // デバッグ用
+    logger.log('Found markers in content:', markers);  // デバッグ用
 
     // 画像マーカーを設定
     imageMarkersRef.current = markers;
-    console.log('Processed image markers:', imageMarkersRef.current);  // デバッグ用
+    logger.log('Processed image markers:', imageMarkersRef.current);  // デバッグ用
 
     // 初期表示時に最初の画像を表示
     if (markers.length > 0) {
@@ -213,6 +221,30 @@ const ScrollableContent: React.FC<ScrollableContentProps> = ({ content }) => {
               height: 100%;
               pointer-events: none;
             }
+            .tategaki {
+              writing-mode: vertical-rl;
+              text-orientation: mixed;
+              font-family: ${zenOldMincho.style.fontFamily};
+            }
+            .tategaki h1 {
+              font-size: 2em;
+              font-weight: bold;
+              margin: 1em 0;
+            }
+            .tategaki h2 {
+              font-size: 1.5em;
+              font-weight: bold;
+              margin: 0.8em 0;
+            }
+            .tategaki h3 {
+              font-size: 1.2em;
+              font-weight: bold;
+              margin: 0.6em 0;
+            }
+            .tategaki p {
+              margin: 1em 0;
+              text-indent: 1em;
+            }
           `}</style>
         </div>
       </div>
@@ -230,7 +262,7 @@ const ScrollableContent: React.FC<ScrollableContentProps> = ({ content }) => {
                   onClick={() => setIsFullscreen(!isFullscreen)}
                   style={{ cursor: 'pointer' }}
                   onError={() => {
-                    console.error('Image load error:', currentImage);
+                    logger.error('Image load error:', currentImage);
                     setImageError(true);
                   }}
                 />

@@ -2,13 +2,14 @@ import { visit } from 'unist-util-visit';
 import type { Plugin } from 'unified';
 import type { Node } from 'unist';
 import type { Element } from 'hast';
+import { logger } from './logger';
 
 export const remarkImagePlugin: Plugin = () => {
-  console.log('remarkImagePlugin initialized');  // プラグインの初期化を確認
+  logger.log('remarkImagePlugin initialized');  // プラグインの初期化を確認
   return (tree: Node) => {
-    console.log('Processing tree:', tree);  // ツリーの構造を確認
+    logger.log('Processing tree:', tree);  // ツリーの構造を確認
     visit(tree, 'img', (node: Element) => {  // 'element' から 'img' に変更
-      console.log('Found img node:', node);  // imgノードを確認
+      logger.log('Found img node:', node);  // imgノードを確認
       const props = node.properties || {};
       let src = props.src as string;
       const alt = props.alt as string;
@@ -34,7 +35,7 @@ export const remarkImagePlugin: Plugin = () => {
         }
       ];
 
-      console.log('Transformed node:', node);  // 変換後のノードを確認
+      logger.log('Transformed node:', node);  // 変換後のノードを確認
     });
   };
 }; 
